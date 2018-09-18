@@ -71,8 +71,11 @@ namespace WebApplication1.Controllers
     public class FilterMetadata
     {
         public string Value { get; set; }
+        //"startsWith", "contains", "endsWith", "equals", "notEquals", "in", "lt", "lte", "gt" and "gte"
         public string MatchMode { get; set; }
     }
+
+    
 
     [Route("api/[controller]")]
     [ApiController]
@@ -103,9 +106,9 @@ namespace WebApplication1.Controllers
                             u.Phone.Contains(value) ||
                             u.Address.Contains(value));
                     }
-                    else
+                    else if (filterMetadata.Key == "id" && filterMetadata.Value.MatchMode == "equals")
                     {
-
+                        q = q.Where(u => u.Id == Convert.ToInt32(filterMetadata.Value.Value));
                     }
                 }
             }

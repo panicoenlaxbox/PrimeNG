@@ -30,7 +30,7 @@ export class DbTableComponent implements OnInit {
   selectedUser: User;
   user: User;
 
-  loading2 = false;
+  filterRowHeight = 50;
 
   constructor(private usersService: UsersService) {
 
@@ -38,7 +38,7 @@ export class DbTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.frozenCols = [
-      { field: 'id', header: 'Id' },
+      { field: 'id', header: 'Id', filterMatchMode: 'equals' },
       { field: 'name', header: 'Name' }
     ];
     this.scrollableCols = [

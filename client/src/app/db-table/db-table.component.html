@@ -72,7 +72,7 @@
       <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dt.filterGlobal($event.target.value, 'contains')"
         style="width:auto">
     </div>
-  </ng-template>  
+  </ng-template>
   <ng-template pTemplate="colgroup" let-columns>
     <colgroup>
       <col *ngFor="let col of columns" [style.width.px]="frozenColWidth">
@@ -84,6 +84,11 @@
         {{col.header}}
         <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
           ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+      </th>
+    </tr>
+    <tr>
+      <th *ngFor="let col of columns" [ngSwitch]="col.field" [style.height.px]="filterRowHeight">
+        <input *ngSwitchCase="'id'" style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
       </th>
     </tr>
   </ng-template>
