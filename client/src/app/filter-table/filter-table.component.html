@@ -2,10 +2,10 @@
   <div class="ui-g ui-fluid" *ngIf="user">
     <div class="ui-g-12">
       <div class="ui-g-4">
-        <label for="index">Index</label>
+        <label for="id">Id</label>
       </div>
       <div class="ui-g-8">
-        <input pInputText id="index" [(ngModel)]="user.index" />
+        <input pInputText id="id" [(ngModel)]="user.id" />
       </div>
     </div>
     <div class="ui-g-12">
@@ -87,7 +87,7 @@
     </tr>
     <tr>
       <th *ngFor="let col of columns" [ngSwitch]="col.field" [style.height.px]="filterRowHeight">
-        <input *ngSwitchCase="'index'" style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+        <input *ngSwitchCase="'id'" style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
         <div *ngSwitchCase="'age'">
           Value < {{ageFilter}} <i (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer"
             *ngIf="ageFilter">

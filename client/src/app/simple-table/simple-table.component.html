@@ -1,11 +1,11 @@
 <h1>Simple</h1>
 <p-table [value]="data" [scrollable]="true" [rows]="50" scrollHeight="400px" [virtualScroll]="true" (onLazyLoad)="onLazyLoad($event)"
-  [lazy]="true" [totalRecords]="totalRecords" [virtualRowHeight]="28" [loading]="loading" sortMode="single" sortField="index"
+  [lazy]="true" [totalRecords]="totalRecords" [virtualRowHeight]="28" [loading]="loading" sortMode="single" sortField="id"
   [lazyLoadOnInit]="false" [virtualScrollDelay]="0" [rowHover]="true" [rowTrackBy]="rowTrackBy" loadingIcon="fas fa-spinner">
   <ng-template pTemplate="header">
     <tr>
-      <th [pSortableColumn]="'index'">Index
-        <p-sortIcon [field]="'index'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+      <th [pSortableColumn]="'id'">Id
+        <p-sortIcon [field]="'id'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
           ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
       </th>
       <th [pSortableColumn]="'name'">Name
@@ -18,7 +18,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-user>
     <tr>
-      <td>{{user.index}}</td>
+      <td>{{user.id}}</td>
       <td>{{user.name}}</td>
       <td>{{user.age}}</td>
     </tr>

@@ -62,7 +62,7 @@ export class PaginatedTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.frozenCols = [
-      { field: 'index', header: 'Index', filterMatchMode: 'equals' },
+      { field: 'id', header: 'Id', filterMatchMode: 'equals' },
       { field: 'name', header: 'Name' }
     ];
     this.scrollableCols = [
@@ -159,7 +159,7 @@ export class PaginatedTableComponent implements OnInit {
     if (!globalFilter) {
       return true;
     }
-    return user.index.toString().includes(globalFilter) ||
+    return user.id.toString().includes(globalFilter) ||
       user.name.includes(globalFilter) ||
       user.age.toString().includes(globalFilter) ||
       user.company.includes(globalFilter) ||
@@ -175,8 +175,8 @@ export class PaginatedTableComponent implements OnInit {
         continue;
       }
       switch (key) {
-        case 'index':
-          if (user.index !== parseInt(filters[key].value, 10)) {
+        case 'id':
+          if (user.id !== parseInt(filters[key].value, 10)) {
             matchFilter = false;
           }
           break;

@@ -34,7 +34,7 @@ export class SimpleTableComponent implements OnInit {
   }
 
   rowTrackBy(index: number, item: any) {
-    return (<User>item).index;
+    return (<User>item).id;
   }
 
   onLazyLoad(event: LazyLoadEvent) {

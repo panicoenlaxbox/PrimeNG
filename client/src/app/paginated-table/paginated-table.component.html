@@ -2,10 +2,10 @@
   <div class="ui-g ui-fluid" *ngIf="user">
     <div class="ui-g-12">
       <div class="ui-g-4">
-        <label for="index">Index</label>
+        <label for="id">Id</label>
       </div>
       <div class="ui-g-8">
-        <input pInputText id="index" [(ngModel)]="user.index" />
+        <input pInputText id="id" [(ngModel)]="user.id" />
       </div>
     </div>
     <div class="ui-g-12">
@@ -64,7 +64,7 @@
 <p-table #dt [value]="data" [scrollable]="true" [rows]="10" (onLazyLoad)="onLazyLoad($event)" [lazy]="true"
   [totalRecords]="totalRecords" [loading]="loading" sortMode="single" [columns]="scrollableCols" [frozenColumns]="frozenCols"
   [sortField]="sortField" [frozenWidth]="getFrozenWidth()" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
-  selectionMode="single" [(selection)]="selectedUser" (onRowSelect)="onRowSelect($event)" pageLinks="3" dataKey="index"
+  selectionMode="single" [(selection)]="selectedUser" (onRowSelect)="onRowSelect($event)" pageLinks="3" dataKey="id"
   (onRowExpand)="onRowExpand($event)" (onRowCollapse)="onRowCollapse($event)">
   <ng-template pTemplate="caption">
     <div style="text-align: right">
@@ -95,7 +95,7 @@
       <th *ngIf="isFrozenCols(columns)">
       </th>
       <th *ngFor="let col of columns" [ngSwitch]="col.field" [style.height.px]="filterRowHeight">
-        <input *ngSwitchCase="'index'" style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+        <input *ngSwitchCase="'id'" style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
         <div *ngSwitchCase="'age'">
           Value < {{ageFilter}} <i (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer"
             *ngIf="ageFilter">
@@ -135,7 +135,7 @@
         <div style="height: 210px;">
           <div *ngIf="!isFrozenCols(columns)" class="detail">
             <div>
-              <b>Index:</b> {{rowData.index}}
+              <b>Id:</b> {{rowData.id}}
             </div>
             <div>
               <b>Name:</b> {{rowData.name}}

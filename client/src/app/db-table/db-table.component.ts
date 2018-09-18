@@ -2,18 +2,21 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { UsersService } from '../users.service';
 import { User } from '../user';
 import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
+import { SortMeta } from 'primeng/components/common/sortmeta';
 import { Table } from 'primeng/table';
+import { HttpParams } from '@angular/common/http';
+import { ApiData } from '../api-data';
 
 @Component({
-  selector: 'app-frozen-table',
-  templateUrl: './frozen-table.component.html',
-  styleUrls: ['./frozen-table.component.scss']
+  selector: 'app-db-table',
+  templateUrl: './db-table.component.html',
+  styleUrls: ['./db-table.component.scss']
 })
-export class FrozenTableComponent implements OnInit {
+export class DbTableComponent implements OnInit {
   dataSource: User[];
   data: User[];
   totalRecords: number;
-  loading: boolean;
+  loading = true;
   frozenCols: any[];
   scrollableCols: any[];
   sortField: string;
@@ -26,6 +29,8 @@ export class FrozenTableComponent implements OnInit {
   newUser = false;
   selectedUser: User;
   user: User;
+
+  loading2 = false;
 
   constructor(private usersService: UsersService) {
 
@@ -43,13 +48,8 @@ export class FrozenTableComponent implements OnInit {
       { field: 'phone', header: 'Phone' },
       { field: 'address', header: 'Address' },
     ];
-    this.table.sortField = this.frozenCols[0].field;
-    this.usersService.getUsers().subscribe((data: User[]) => {
-      this.dataSource = data;
-      this.totalRecords = this.dataSource.length;
-      this.onLazyLoad(this.table.createLazyLoadMetadata());
-    });
-    this.loading = true;
+    // this.table.sortField = this.frozenCols[0].field;
+    this.table.multiSortMeta = [<SortMeta>{ field: this.frozenCols[0].field, order: 1 }];
   }
 
   onRowSelect(event) {
@@ -119,22 +119,15 @@ export class FrozenTableComponent implements OnInit {
   }
 
   onLazyLoad(event: LazyLoadEvent) {
+    if (this.data && this.loading) {
+      return;
+    }
     console.log(event);
     this.loading = true;
-
-    setTimeout(() => {
-      if (event.sortField) {
-        this.dataSource = this.dataSource.sort((a: User, b: User) => {
-          if (a[event.sortField] < b[event.sortField]) {
-            return event.sortOrder === 1 ? -1 : 1;
-          } else if (a[event.sortField] > b[event.sortField]) {
-            return event.sortOrder === 1 ? 1 : -1;
-          }
-          return 0;
-        });
-      }
-      this.data = this.dataSource.slice(event.first, event.first + event.rows);
+    this.usersService.getApiUsers(event).subscribe((apiData: ApiData<User>) => {
+      this.data = apiData.data;
+      this.totalRecords = apiData.totalRecords;
       this.loading = false;
-    }, 0);
+    });
   }
 }

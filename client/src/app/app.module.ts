@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TableModule } from 'primeng/table';
 import { SimpleTableComponent } from './simple-table/simple-table.component';
 import { FrozenTableComponent } from './frozen-table/frozen-table.component';
+import { DbTableComponent } from './db-table/db-table.component';
 import { FilterTableComponent } from './filter-table/filter-table.component';
 import { PaginatedTableComponent } from './paginated-table/paginated-table.component';
 import { FormsModule } from '@angular/forms';
@@ -33,7 +34,8 @@ library.add(faSync);
         SimpleTableComponent,
         FrozenTableComponent,
         FilterTableComponent,
-        PaginatedTableComponent
+        PaginatedTableComponent,
+        DbTableComponent
     ],
     imports: [
         BrowserModule,
