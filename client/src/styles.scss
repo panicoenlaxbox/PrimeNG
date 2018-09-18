@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+tr.truncate > td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+div.detail {
+  font-style: italic;
+  > div {
+    padding: 5px;
+  }
+}

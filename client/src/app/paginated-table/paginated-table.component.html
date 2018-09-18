@@ -1,0 +1,165 @@
+<p-sidebar [(visible)]="display" position="right" styleClass="ui-sidebar-md">
+  <div class="ui-g ui-fluid" *ngIf="user">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="index">Index</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="index" [(ngModel)]="user.index" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="name">Name</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="name" [(ngModel)]="user.name" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="age">Age</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="age" [(ngModel)]="user.age" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="company">Company</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="company" [(ngModel)]="user.company" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="email">Email</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="email" [(ngModel)]="user.email" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="phone">Phone</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="phone" [(ngModel)]="user.phone" />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="address">Address</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="address" [(ngModel)]="user.address" />
+      </div>
+    </div>
+  </div>
+  <button pButton type="button" (click)="save()" label="Save"></button>
+  <button pButton type="button" (click)="display = false" label="Cancel"></button>
+</p-sidebar>
+<p>{{totalRecords}}</p>
+<p-table #dt [value]="data" [scrollable]="true" [rows]="10" (onLazyLoad)="onLazyLoad($event)" [lazy]="true"
+  [totalRecords]="totalRecords" [loading]="loading" sortMode="single" [columns]="scrollableCols" [frozenColumns]="frozenCols"
+  [sortField]="sortField" [frozenWidth]="getFrozenWidth()" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
+  selectionMode="single" [(selection)]="selectedUser" (onRowSelect)="onRowSelect($event)" pageLinks="3" dataKey="index"
+  (onRowExpand)="onRowExpand($event)" (onRowCollapse)="onRowCollapse($event)">
+  <ng-template pTemplate="caption">
+    <div style="text-align: right">
+      <fa-icon icon="search" style="margin:4px 4px 0 0"></fa-icon>
+      <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dt.filterGlobal($event.target.value, 'contains')"
+        style="width:auto">
+    </div>
+  </ng-template>
+  <ng-template pTemplate="colgroup" let-columns>
+    <!-- Por aquí pasa 4 veces, 2 veces con 2 columnas y 2 veces más con 5 columnas-->
+    <colgroup>
+      <col *ngIf="isFrozenCols(columns)" [style.width.px]="rowExpandColWidth">
+      <col *ngFor="let col of columns" [style.width.px]="frozenColWidth">
+    </colgroup>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <!-- por aquí pasa 2 veces, la primera con 2 columnas y la siguiente con 5 -->
+    <tr>
+      <th *ngIf="isFrozenCols(columns)">
+      </th>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        {{col.header}}
+        <p-sortIcon [field]="col.field" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+          ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+      </th>
+    </tr>
+    <tr>
+      <th *ngIf="isFrozenCols(columns)">
+      </th>
+      <th *ngFor="let col of columns" [ngSwitch]="col.field" [style.height.px]="filterRowHeight">
+        <input *ngSwitchCase="'index'" style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+        <div *ngSwitchCase="'age'">
+          Value < {{ageFilter}} <i (click)="ageFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer"
+            *ngIf="ageFilter">
+            <fa-icon icon="times"></fa-icon></i>
+            <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="ageFilter" [min]="0" [max]="100"
+              (onChange)="onAgeChange($event, dt)"></p-slider>
+        </div>
+        <p-dropdown *ngSwitchCase="'company'" appendTo="body" [options]="companies" [style]="{'width':'100%'}"
+          (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <!-- por aquí pasa 2 veces, la primera con 2 columnas y la siguiente con 5 -->
+    <tr class="truncate" [pSelectableRow]="rowData">
+      <td *ngIf="isFrozenCols(columns)">
+        <a href="#" [pRowToggler]="rowData">
+          <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+        </a>
+      </td>
+      <td *ngFor="let col of columns">
+        {{rowData[col.field]}}
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft" let-state>
+    {{ state | json }}
+  </ng-template>
+  <ng-template pTemplate="paginatorright">
+    <button type="button" pButton label="Refresh" (click)="reset()">
+    </button>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+    <!-- por aquí pasa 2 veces, la primera con 2 columnas y la siguiente con 5 -->
+    <tr>
+      <td [attr.colspan]="columns.length + (isFrozenCols(columns)?1:0)">
+        <div style="height: 210px;">
+          <div *ngIf="!isFrozenCols(columns)" class="detail">
+            <div>
+              <b>Index:</b> {{rowData.index}}
+            </div>
+            <div>
+              <b>Name:</b> {{rowData.name}}
+            </div>
+            <div>
+              <b>Age:</b> {{rowData.age}}
+            </div>
+            <div>
+              <b>Company:</b> {{rowData.company}}
+            </div>
+            <div>
+              <b>Email:</b> {{rowData.email}}
+            </div>
+            <div>
+              <b>Phone:</b> {{rowData.phone}}
+            </div>
+            <div>
+              <b>Address:</b> {{rowData.address}}
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<router-outlet></router-outlet>

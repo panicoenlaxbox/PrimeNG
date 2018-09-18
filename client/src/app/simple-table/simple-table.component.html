@@ -1,0 +1,28 @@
+<h1>Simple</h1>
+<p-table [value]="data" [scrollable]="true" [rows]="50" scrollHeight="400px" [virtualScroll]="true" (onLazyLoad)="onLazyLoad($event)"
+  [lazy]="true" [totalRecords]="totalRecords" [virtualRowHeight]="28" [loading]="loading" sortMode="single" sortField="index"
+  [lazyLoadOnInit]="false" [virtualScrollDelay]="0" [rowHover]="true" [rowTrackBy]="rowTrackBy" loadingIcon="fas fa-spinner">
+  <ng-template pTemplate="header">
+    <tr>
+      <th [pSortableColumn]="'index'">Index
+        <p-sortIcon [field]="'index'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+          ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+      </th>
+      <th [pSortableColumn]="'name'">Name
+        <p-sortIcon [field]="'name'" ariaLabel="Activate to sort" ariaLabelDesc="Activate to sort in descending order"
+          ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+      </th>
+      <th>Age
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-user>
+    <tr>
+      <td>{{user.index}}</td>
+      <td>{{user.name}}</td>
+      <td>{{user.age}}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<router-outlet></router-outlet>
