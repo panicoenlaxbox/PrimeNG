@@ -66,7 +66,7 @@
   [lazy]="true" [totalRecords]="totalRecords" [virtualRowHeight]="28" [loading]="loading" [columns]="scrollableCols"
   [frozenColumns]="frozenCols" [frozenWidth]="getFrozenWidth()" [lazyLoadOnInit]="true" [virtualScrollDelay]="0"
   [rowTrackBy]="rowTrackBy" loadingIcon="fas fa-spinner" selectionMode="single" [(selection)]="selectedUser"
-  (onRowSelect)="onRowSelect($event)" sortMode="multiple" sortField="id">
+  (onRowSelect)="onRowSelect($event)" sortMode="multiple">
   <ng-template pTemplate="caption">
     <div style="text-align: right">
       <fa-icon icon="search" style="margin:4px 4px 0 0"></fa-icon>

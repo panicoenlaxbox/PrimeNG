@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +22,7 @@ import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { SidebarModule } from 'primeng/sidebar';
+import { GlobalErrorHandler } from './global-error-handler';
 
 
 library.add(faTimes);
@@ -51,7 +52,12 @@ library.add(faSync);
         DropdownModule,
         SidebarModule
     ],
-    providers: [],
+    providers: [
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,12 +5,13 @@ import { User } from './user';
 import { defaultIfEmpty, filter, flatMap } from 'rxjs/operators';
 import { ApiData } from './api-data';
 import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
+import { ParamsSerializerService } from './params-serializer.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private paramsSerializer: ParamsSerializerService) {
   }
 
   public getUsers(): Observable<User[]> {
@@ -18,7 +19,7 @@ export class UsersService {
   }
 
   public getApiUsers(event: LazyLoadEvent): Observable<ApiData<User>> {
-    const s = this.serializeParams(event);
+    const s = this.paramsSerializer.serialize(event);
     console.log(s);
     return this.http.get<ApiData<User>>('https://localhost:5001/api/users', {
       params: new HttpParams({
@@ -29,36 +30,5 @@ export class UsersService {
 
   public delete(id: number): Observable<User> {
     return this.http.delete<User>(`https://localhost:5001/api/users/${id}`);
-  }
-
-  private serializeParams(obj: Object) {
-    let s = this._serializeParams(obj);
-    if (s !== '') {
-      s = s.substring(1, s.length);
-    }
-    return s;
-  }
-
-  private _serializeParams(obj: Object, prefix?: string) {
-    prefix = prefix || '';
-    let s = '';
-    if (typeof obj !== 'object') {
-      return `&${encodeURIComponent(prefix)}=${encodeURIComponent(obj)}`;
-    }
-    for (const prop in obj) {
-      if (obj[prop] === null || obj[prop] === undefined) {
-        continue;
-      }
-      if (Array.isArray(obj[prop])) {
-        for (let index = 0; index < obj[prop].length; index++) {
-          s += this._serializeParams(obj[prop][index], prefix + (prefix ? '.' : '') + prop + '[' + index + ']');
-        }
-      } else if (typeof obj[prop] === 'object') {
-        s += this._serializeParams(obj[prop], prefix + (prefix ? '.' : '') + prop);
-      } else {
-        s += `&${encodeURIComponent((prefix ? prefix + '.' : '') + prop)}=${encodeURIComponent(obj[prop])}`;
-      }
-    }
-    return s;
   }
 }

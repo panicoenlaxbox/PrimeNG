@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { UsersService } from '../users.service';
 import { User } from '../user';
 import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
 import { SortMeta } from 'primeng/components/common/sortmeta';
 import { Table } from 'primeng/table';
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { ApiData } from '../api-data';
+import { Users2Service } from '../users2.service';
+import { CustomError } from '../custom-error';
 
 @Component({
   selector: 'app-db-table',
@@ -32,7 +33,7 @@ export class DbTableComponent implements OnInit {
 
   filterRowHeight = 50;
 
-  constructor(private usersService: UsersService) {
+  constructor(private usersService: Users2Service) {
 
   }
 
@@ -100,6 +101,9 @@ export class DbTableComponent implements OnInit {
       this.data.splice(i, 1);
       this.user = null;
       this.display = false;
+      throw new Error('Sergio');
+    }, (error: CustomError) => {
+      console.log('delete', error);
     });
   }
 
@@ -125,10 +129,12 @@ export class DbTableComponent implements OnInit {
     }
     console.log(event);
     this.loading = true;
-    this.usersService.getApiUsers(event).subscribe((apiData: ApiData<User>) => {
+    this.usersService.get(event).subscribe((apiData: ApiData<User>) => {
       this.data = apiData.data;
       this.totalRecords = apiData.totalRecords;
       this.loading = false;
+    }, (error: CustomError) => {
+      console.log('delete', error);
     });
   }
 }
