@@ -54,12 +54,19 @@ export class DbTableComponent implements OnInit {
 
   onRowSelect(event) {
     this.newUser = false;
-    this.user = this.cloneUser(<User>event.data);
+    const user = (<User>event.data);
+    this.user = this.cloneUser(user);
+    this.display = true;
+  }
+
+  add() {
+    this.newUser = true;
+    this.user = <User>{};
     this.display = true;
   }
 
   cloneUser(user: User): User {
-    const clonedUser = {};
+    const clonedUser = <User>{};
     for (const prop in user) {
       if (user.hasOwnProperty(prop)) {
         clonedUser[prop] = user[prop];
@@ -85,29 +92,23 @@ export class DbTableComponent implements OnInit {
     this.display = false;
   }
 
+  delete() {
+    this.usersService.delete(this.selectedUser.id).subscribe((user: User) => {
+      const i = this.data.findIndex((value: User, index: number, obj: User[]) => {
+        return value.id === this.selectedUser.id;
+      });
+      this.data.splice(i, 1);
+      this.user = null;
+      this.display = false;
+    });
+  }
+
   onShow(): void {
     console.log('onShow');
   }
 
   onHide(): void {
     console.log('onHide');
-  }
-
-  delete() {
-    let indexOf = this.dataSource.indexOf(this.selectedUser);
-    this.dataSource = this.dataSource.filter((value, index) => index !== indexOf);
-
-    indexOf = this.data.indexOf(this.selectedUser);
-    this.data = this.data.filter((value, index) => index !== indexOf);
-
-    this.user = null;
-    this.display = false;
-  }
-
-  add() {
-    this.newUser = true;
-    this.user = <User>{};
-    this.display = true;
   }
 
   getFrozenWidth(): string {

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace WebApplication1.Controllers
 {
@@ -75,7 +75,7 @@ namespace WebApplication1.Controllers
         public string MatchMode { get; set; }
     }
 
-    
+
 
     [Route("api/[controller]")]
     [ApiController]
@@ -135,6 +135,24 @@ namespace WebApplication1.Controllers
                 TotalRecords = await _context.Users.CountAsync(),
                 Data = await q.Skip(lazyLoadEvent.First).Take(lazyLoadEvent.Rows).ToListAsync()
             };
+        }
+
+        // DELETE api/users/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<User>> Delete([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return Ok(user);
         }
     }
 }

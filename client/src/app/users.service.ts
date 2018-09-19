@@ -27,7 +27,11 @@ export class UsersService {
     });
   }
 
-  public serializeParams(obj: Object) {
+  public delete(id: number): Observable<User> {
+    return this.http.delete<User>(`https://localhost:5001/api/users/${id}`);
+  }
+
+  private serializeParams(obj: Object) {
     let s = this._serializeParams(obj);
     if (s !== '') {
       s = s.substring(1, s.length);

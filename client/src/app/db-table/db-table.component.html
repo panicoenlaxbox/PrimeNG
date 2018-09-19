@@ -58,8 +58,9 @@
       </div>
     </div>
   </div>
-  <button pButton type="button" (click)="delete()" label="Delete"></button>
-  <button pButton type="button" (click)="save()" label="Save"></button>
+  <button pButton type="button" class="ui-button-danger" (click)="delete()" label="Delete"></button>
+  <button pButton type="button" class="ui-button-primary" (click)="save()" label="Save"></button>
+  <button pButton type="button" class="ui-button-secondary" (click)="display = false" label="Cancel"></button>
 </p-sidebar>
 <p-table #dt [value]="data" [scrollable]="true" [rows]="50" scrollHeight="400px" [virtualScroll]="true" (onLazyLoad)="onLazyLoad($event)"
   [lazy]="true" [totalRecords]="totalRecords" [virtualRowHeight]="28" [loading]="loading" [columns]="scrollableCols"
