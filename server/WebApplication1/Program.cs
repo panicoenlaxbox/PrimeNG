@@ -46,7 +46,6 @@ namespace WebApplication1
         }
     }
 
-
     public class CustomExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;

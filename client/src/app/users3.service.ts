@@ -7,7 +7,6 @@ import { ApiData } from './api-data';
 import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
 import { ParamsSerializerService } from './params-serializer.service';
 import { catchError } from 'rxjs/operators';
-import { CustomHttpErrorResponse } from './custom-http-error-response';
 import { throwError } from 'rxjs';
 
 @Injectable({
@@ -17,7 +16,7 @@ export class Users3Service {
   constructor(private http: HttpClient, private paramsSerializer: ParamsSerializerService) {
   }
 
-  public delete(id: number): Observable<User | CustomHttpErrorResponse> {
+  public delete(id: number): Observable<User | HttpErrorResponse> {
     return this.http.delete<User>(`https://localhost:5001/api/users/${id}`);
   }
 }

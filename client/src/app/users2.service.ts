@@ -7,7 +7,6 @@ import { ApiData } from './api-data';
 import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
 import { ParamsSerializerService } from './params-serializer.service';
 import { catchError } from 'rxjs/operators';
-import { CustomHttpErrorResponse } from './custom-http-error-response';
 import { throwError } from 'rxjs';
 
 @Injectable({
@@ -17,18 +16,13 @@ export class Users2Service {
   constructor(private http: HttpClient, private paramsSerializer: ParamsSerializerService) {
   }
 
-  public get(event: LazyLoadEvent): Observable<ApiData<User> | CustomHttpErrorResponse> {
+  public get(event: LazyLoadEvent): Observable<ApiData<User> | HttpErrorResponse> {
     return this.http.get<ApiData<User>>('https://localhost:5001/api/users', {
       params: new HttpParams({
         fromString: this.paramsSerializer.serialize(event)
       })
     });
     // .pipe(catchError((error: HttpErrorResponse) => this.createCustomHttpErrorResponse(error)));
-  }
-
-  public delete(id: number): Observable<User | CustomHttpErrorResponse> {
-    return this.http.delete<User>(`https://localhost:5001/api/users/${id}`);
-      // .pipe(catchError((error: HttpErrorResponse) => this.createCustomHttpErrorResponse(error)));
   }
 
   // private createCustomHttpErrorResponse(error: HttpErrorResponse): Observable<CustomHttpErrorResponse> {

@@ -23,7 +23,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { SidebarModule } from 'primeng/sidebar';
 import { GlobalErrorHandler } from './global-error-handler';
-import { CustomHttpErrorResponseInterceptor } from './custom-http-error-response-interceptor';
+import { HttpErrorResponseInterceptor } from './custom-http-error-response-interceptor';
 
 
 library.add(faTimes);
@@ -60,7 +60,7 @@ library.add(faSync);
         },
         {
             provide: HTTP_INTERCEPTORS,
-            useClass: CustomHttpErrorResponseInterceptor,
+            useClass: HttpErrorResponseInterceptor,
             multi: true,
         }
     ],

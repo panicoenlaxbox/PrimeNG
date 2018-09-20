@@ -6,10 +6,10 @@ import { Table } from 'primeng/table';
 import { HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { ApiData } from '../api-data';
 import { Users2Service } from '../users2.service';
-import { CustomHttpErrorResponse } from '../custom-http-error-response';
 import { Users3Service } from '../users3.service';
 import { ApiErrorResponse } from '../api-error-response';
 import { environment } from '../../environments/environment';
+import { ErrorNotifierService } from '../error-notifier.service';
 
 @Component({
   selector: 'app-db-table',
@@ -36,7 +36,7 @@ export class DbTableComponent implements OnInit {
 
   filterRowHeight = 50;
 
-  constructor(private usersService: Users2Service, private users3Service: Users3Service) {
+  constructor(private usersService: Users2Service, private users3Service: Users3Service, private errorNotifier: ErrorNotifierService) {
 
   }
 
@@ -106,22 +106,17 @@ export class DbTableComponent implements OnInit {
       this.display = false;
       // throw new Error('Sergio');
       // console.log('después de Sergio');
-    }, (error: CustomHttpErrorResponse) => {
-      console.log(error.message);
-      const apiErrorResponse = (<ApiErrorResponse>error.error.error);
-      console.log(apiErrorResponse.ExtraData);
-      if (!environment.production) {
-        console.log(apiErrorResponse.Debug);
-      }
+    }, (error: HttpErrorResponse) => {
+      this.errorNotifier.show(error);
     });
   }
 
   onShow(): void {
-    console.log('onShow');
+    // console.log('onShow');
   }
 
   onHide(): void {
-    console.log('onHide');
+    // console.log('onHide');
   }
 
   getFrozenWidth(): string {
@@ -143,7 +138,7 @@ export class DbTableComponent implements OnInit {
       this.data = apiData.data;
       this.totalRecords = apiData.totalRecords;
       this.loading = false;
-    }, (error: CustomHttpErrorResponse) => {
+    }, (error: HttpErrorResponse) => {
       console.log(error);
     });
   }
