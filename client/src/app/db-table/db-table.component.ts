@@ -6,7 +6,10 @@ import { Table } from 'primeng/table';
 import { HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { ApiData } from '../api-data';
 import { Users2Service } from '../users2.service';
-import { CustomError } from '../custom-error';
+import { CustomHttpErrorResponse } from '../custom-http-error-response';
+import { Users3Service } from '../users3.service';
+import { ApiErrorResponse } from '../api-error-response';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-db-table',
@@ -33,7 +36,7 @@ export class DbTableComponent implements OnInit {
 
   filterRowHeight = 50;
 
-  constructor(private usersService: Users2Service) {
+  constructor(private usersService: Users2Service, private users3Service: Users3Service) {
 
   }
 
@@ -94,16 +97,22 @@ export class DbTableComponent implements OnInit {
   }
 
   delete() {
-    this.usersService.delete(this.selectedUser.id).subscribe((user: User) => {
+    this.users3Service.delete(this.selectedUser.id).subscribe((user: User) => {
       const i = this.data.findIndex((value: User, index: number, obj: User[]) => {
         return value.id === this.selectedUser.id;
       });
       this.data.splice(i, 1);
       this.user = null;
       this.display = false;
-      throw new Error('Sergio');
-    }, (error: CustomError) => {
-      console.log('delete', error);
+      // throw new Error('Sergio');
+      // console.log('después de Sergio');
+    }, (error: CustomHttpErrorResponse) => {
+      console.log(error.message);
+      const apiErrorResponse = (<ApiErrorResponse>error.error.error);
+      console.log(apiErrorResponse.ExtraData);
+      if (!environment.production) {
+        console.log(apiErrorResponse.Debug);
+      }
     });
   }
 
@@ -124,6 +133,7 @@ export class DbTableComponent implements OnInit {
   }
 
   onLazyLoad(event: LazyLoadEvent) {
+    // throw new Error('Sergio');
     if (this.data && this.loading) {
       return;
     }
@@ -133,8 +143,8 @@ export class DbTableComponent implements OnInit {
       this.data = apiData.data;
       this.totalRecords = apiData.totalRecords;
       this.loading = false;
-    }, (error: CustomError) => {
-      console.log('delete', error);
+    }, (error: CustomHttpErrorResponse) => {
+      console.log(error);
     });
   }
 }

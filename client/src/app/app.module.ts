@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonModule } from 'primeng/button';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TableModule } from 'primeng/table';
 import { SimpleTableComponent } from './simple-table/simple-table.component';
 import { FrozenTableComponent } from './frozen-table/frozen-table.component';
@@ -23,6 +23,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { SidebarModule } from 'primeng/sidebar';
 import { GlobalErrorHandler } from './global-error-handler';
+import { CustomHttpErrorResponseInterceptor } from './custom-http-error-response-interceptor';
 
 
 library.add(faTimes);
@@ -56,6 +57,11 @@ library.add(faSync);
         {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: CustomHttpErrorResponseInterceptor,
+            multi: true,
         }
     ],
     bootstrap: [AppComponent]

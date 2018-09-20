@@ -7,7 +7,7 @@ import { ApiData } from './api-data';
 import { LazyLoadEvent } from 'primeng/components/common/lazyloadevent';
 import { ParamsSerializerService } from './params-serializer.service';
 import { catchError } from 'rxjs/operators';
-import { CustomError } from './custom-error';
+import { CustomHttpErrorResponse } from './custom-http-error-response';
 import { throwError } from 'rxjs';
 
 @Injectable({
@@ -17,27 +17,26 @@ export class Users2Service {
   constructor(private http: HttpClient, private paramsSerializer: ParamsSerializerService) {
   }
 
-  public get(event: LazyLoadEvent): Observable<ApiData<User> | CustomError> {
-    const s = this.paramsSerializer.serialize(event);
+  public get(event: LazyLoadEvent): Observable<ApiData<User> | CustomHttpErrorResponse> {
     return this.http.get<ApiData<User>>('https://localhost:5001/api/users', {
       params: new HttpParams({
-        fromString: s
+        fromString: this.paramsSerializer.serialize(event)
       })
-    }).pipe(catchError((error: HttpErrorResponse) => this.createCustomError(error)));
+    });
+    // .pipe(catchError((error: HttpErrorResponse) => this.createCustomHttpErrorResponse(error)));
   }
 
-  public delete(id: number): Observable<User | CustomError> {
-    // return this.http.delete<User>(`https://localhost:5001/api/users/${id}`)
-    //   .pipe(
-    //     catchError((error: HttpErrorResponse) => this.createCustomError(error)));
+  public delete(id: number): Observable<User | CustomHttpErrorResponse> {
     return this.http.delete<User>(`https://localhost:5001/api/users/${id}`);
+      // .pipe(catchError((error: HttpErrorResponse) => this.createCustomHttpErrorResponse(error)));
   }
 
-  private createCustomError(error: HttpErrorResponse): Observable<CustomError> {
-    const customError = new CustomError();
-    customError.statusText = error.statusText;
-    customError.error = error.error;
-    customError.message = 'An error has occurred. We are doing our best to fix it please try in a moment';
-    return throwError(customError);
-  }
+  // private createCustomHttpErrorResponse(error: HttpErrorResponse): Observable<CustomHttpErrorResponse> {
+  //   const customHttpErrorResponse = new CustomHttpErrorResponse();
+  //   customHttpErrorResponse.status = error.status;
+  //   customHttpErrorResponse.statusText = error.statusText;
+  //   customHttpErrorResponse.message = 'An error has occurred. We are doing our best to fix it please try in a moment';
+  //   customHttpErrorResponse.error = error;
+  //   return throwError(customHttpErrorResponse);
+  // }
 }

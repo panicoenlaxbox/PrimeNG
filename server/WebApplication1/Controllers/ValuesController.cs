@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace WebApplication1.Controllers
@@ -77,6 +79,8 @@ namespace WebApplication1.Controllers
 
 
 
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -141,6 +145,19 @@ namespace WebApplication1.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> Delete([FromRoute] int id)
         {
+            //throw new ApiErrorException("Hello World!");
+            //throw new ApiErrorException("Hello World!", friendlyMessage: "¡Hola Mundo!");
+            //throw new ApiErrorException("Hello World!", friendlyMessage: "¡Hola Mundo!", statusCode: (int)HttpStatusCode.BadRequest);
+            dynamic extraData = new ExpandoObject();
+            extraData.FirstName = "Sergio";
+            extraData.LastName = "León";
+            extraData.NickName = "panicoenlaxbox";
+            extraData.Age = 42;
+            extraData.Cities = new List<string>() { "Madrid", "Málaga" };
+            throw new ApiErrorException("Hello World!", friendlyMessage: "¡Hola Mundo!", statusCode: (int)HttpStatusCode.BadRequest, extraData: extraData);
+
+            //throw new DivideByZeroException();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -155,6 +172,6 @@ namespace WebApplication1.Controllers
             return Ok(user);
         }
 
-       
+
     }
 }
